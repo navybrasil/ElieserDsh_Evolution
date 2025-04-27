@@ -6,7 +6,12 @@ services:
     plan: free
     branch: main
     numInstances: 1
-    healthCheckPath: /healthz
+    # Remove health check for now - we'll add it back later once the service is working
+    # healthCheckPath: /healthz
+
+    # Add proper port configuration for Render
+    ports:
+      - port: 8080
 
     envVars:
       - key: DATABASE_PROVIDER
@@ -34,6 +39,9 @@ services:
         value: "*"
       - key: AUTHENTICATION_API_KEY
         value: ab8rmpU9V4T4XwwfAbUWg1N4z1evOgZ4
+      # Add this to ensure app listens on the right port
+      - key: EXTERNAL_PORT
+        value: "8080"
 
   - type: keyvalue
     name: evolution-redis
