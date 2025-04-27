@@ -2,49 +2,24 @@ services:
   - type: web
     name: evolution-api
     env: docker
-    region: frankfurt # você pode trocar para sua região preferida
+    region: frankfurt # define a região (mesma do banco para menor latência)
     plan: free
     branch: main
-    numInstances: 1
-    healthCheckPath: /healthz
+    numInstances: 1 # número de instâncias do serviço
+    healthCheckPath: /healthz # endpoint de checagem de saúde
+
     envVars:
-      # 1) Provider para rodar as migrations corretas
       - key: DATABASE_PROVIDER
-        value: postgresql
-
-      # 2) Conexão ao banco (Render injeta host, user, senha, porta e database)
-      - key: DB_HOST
-        fromDatabase:
-          name: evolutionDB
-          property: host
-      - key: DB_DATABASE
-        fromDatabase:
-          name: evolutionDB
-          property: database
-      - key: DB_PORT
-        fromDatabase:
-          name: evolutionDB
-          property: port
-      - key: DB_USER
-        fromDatabase:
-          name: evolutionDB
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: evolutionDB
-          property: password
-
-      # 3) URL completa para o Prisma (já monta tudo que precisa)
+        value: postgresql # especifica o provedor do banco (PostgreSQL)
       - key: DATABASE_URL
+        # URL de conexão completa (usuário, senha, host, porta, nome do banco) do PostgreSQL no Render
         fromDatabase:
           name: evolutionDB
           property: connectionString
-
-      # 4) Porta que o seu app expõe
       - key: PORT
-        value: "8080"
+        value: 8080 # porta em que a aplicação será executada (padrão 8080)
 
 databases:
   - name: evolutionDB
-    region: frankfurt
-    plan: free
+    region: frankfurt # banco de dados na mesma região do serviço
+    plan: free # plano gratuito do banco
