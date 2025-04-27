@@ -1,2 +1,2 @@
-FROM devlikeapro/whatsapp-api-evolution
+FROM evolutionapi/evolution:latest
 

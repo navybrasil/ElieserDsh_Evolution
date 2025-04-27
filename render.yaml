@@ -2,52 +2,62 @@ services:
   - type: web
     name: evolution-api
     env: docker
-    region: frankfurt # opcional (padrão é oregon)
-    plan: free # opcional (padrão é starter)
-    branch: main # opcional (padrão é master)
+    region: frankfurt
+    plan: free
+    branch: main
     numInstances: 1
     healthCheckPath: /
     envVars:
       - key: PORT
-        value: 5555
+        value: 8080
+      - key: DOMAIN
+        value: "https://evolution-api.onrender.com"
       - key: AUTHENTICATION_TYPE
         value: apikey
       - key: APIKEY
-        value: S3NHAP4DR40 # Recomendado mudar para uma chave mais segura
+        value: S3NHAP4DR40
       - key: CORS_ORIGIN
         value: "*"
       - key: LOG_LEVEL
         value: info
       - key: TZ
         value: America/Sao_Paulo
+      - key: DATABASE_ENABLED
+        value: "true"
+      - key: DATABASE_CONNECTION_URI
+        value: "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}"
+      - key: DB_HOST
+        fromDatabase:
+          name: evolution_db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: evolution_db
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: evolution_db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: evolution_db
+          property: password
+      - key: DB_DATABASE
+        fromDatabase:
+          name: evolution_db
+          property: database
       - key: WEBHOOK_GLOBAL
         value: "false"
       - key: WEBHOOK_EVENTS
         value: "messages,notifications"
-      - key: DATABASE_CONNECTION_URI
-        fromDatabase:
-          name: evolution-mongodb
-          property: connectionString
-      - key: DATABASE_USER
-        fromDatabase:
-          name: evolution-mongodb
-          property: user
-      - key: DATABASE_PASSWORD
-        fromDatabase:
-          name: evolution-mongodb
-          property: password
-      - key: DATABASE_NAME
-        value: evolution_api
       - key: INSTANCE_MAX_RETRY_QR
         value: "5"
       - key: DEL_INSTANCE
-        value: "0" # Altere para 1 se quiser que a instância seja excluída após desconexão
-      - key: BASE_URL
-        value: # Será preenchido manualmente após a criação
+        value: "0"
+      - key: SAVE_DATA_NEW_MESSAGE
+        value: "true"
 
 databases:
-  - name: evolution-mongodb
-    region: frankfurt # opcional (padrão é oregon)
+  - name: evolution_db
+    region: frankfurt
     plan: free
-    # Corrigido para usar underscores em vez de hífens
-    databaseName: evolution_api
