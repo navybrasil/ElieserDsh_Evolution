@@ -2,47 +2,37 @@ services:
   - type: web
     name: evolution-api
     env: docker
-    region: frankfurt
+    region: frankfurt # or your preferred region
     plan: free
     branch: main
     numInstances: 1
-    healthCheckPath: /
-    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
     envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: evolutionDB
+          property: host
+      - key: DB_DATABASE
+        fromDatabase:
+          name: evolutionDB
+          property: database
+      - key: DB_PORT
+        fromDatabase:
+          name: evolutionDB
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: evolutionDB
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: evolutionDB
+          property: password
+      # Add any other necessary environment variables
       - key: PORT
         value: 8080
-      - key: DOMAIN
-        value: "https://evolution-api.onrender.com"
-      # Configuração específica do banco de dados
-      - key: DATABASE_PROVIDER
-        value: "postgresql"
-      - key: DATABASE_ENABLED
-        value: "true"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: evolution_db
-          property: connectionString
-      # Autenticação e configurações gerais
-      - key: AUTHENTICATION_TYPE
-        value: "apikey"
-      - key: APIKEY
-        value: "S3NHAP4DR40"
-      - key: CORS_ORIGIN
-        value: "*"
-      - key: LOG_LEVEL
-        value: "info"
-      - key: TZ
-        value: "America/Sao_Paulo"
-      - key: WEBHOOK_GLOBAL
-        value: "false"
-      - key: WEBHOOK_EVENTS
-        value: "messages,notifications"
-      - key: INSTANCE_MAX_RETRY_QR
-        value: "5"
-      - key: DEL_INSTANCE
-        value: "0"
 
 databases:
-  - name: evolution_db
+  - name: evolutionDB
     region: frankfurt
     plan: free
