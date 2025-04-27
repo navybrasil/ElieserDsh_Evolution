@@ -7,45 +7,32 @@ services:
     branch: main
     numInstances: 1
     healthCheckPath: /
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: PORT
         value: 8080
       - key: DOMAIN
         value: "https://evolution-api.onrender.com"
+      # Configuração específica do banco de dados
+      - key: DATABASE_PROVIDER
+        value: "postgresql"
+      - key: DATABASE_ENABLED
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: evolution_db
+          property: connectionString
+      # Autenticação e configurações gerais
       - key: AUTHENTICATION_TYPE
-        value: apikey
+        value: "apikey"
       - key: APIKEY
-        value: S3NHAP4DR40
+        value: "S3NHAP4DR40"
       - key: CORS_ORIGIN
         value: "*"
       - key: LOG_LEVEL
-        value: info
+        value: "info"
       - key: TZ
-        value: America/Sao_Paulo
-      - key: DATABASE_ENABLED
-        value: "true"
-      - key: DATABASE_CONNECTION_URI
-        value: "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}"
-      - key: DB_HOST
-        fromDatabase:
-          name: evolution_db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: evolution_db
-          property: port
-      - key: DB_USER
-        fromDatabase:
-          name: evolution_db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: evolution_db
-          property: password
-      - key: DB_DATABASE
-        fromDatabase:
-          name: evolution_db
-          property: database
+        value: "America/Sao_Paulo"
       - key: WEBHOOK_GLOBAL
         value: "false"
       - key: WEBHOOK_EVENTS
@@ -54,8 +41,6 @@ services:
         value: "5"
       - key: DEL_INSTANCE
         value: "0"
-      - key: SAVE_DATA_NEW_MESSAGE
-        value: "true"
 
 databases:
   - name: evolution_db
