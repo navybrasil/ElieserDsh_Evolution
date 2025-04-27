@@ -1,2 +1,1 @@
-FROM evolutionapi/evolution:latest
-
+FROM docker.io/davidsongomes/evolution-api:latest
