@@ -6,13 +6,10 @@ services:
     plan: free
     branch: main
     numInstances: 1
-    # Remove health check for now - we'll add it back later once the service is working
-    # healthCheckPath: /healthz
-
-    # Add proper port configuration for Render
+    healthCheckPath: /healthz # Ensure health check path is set
     ports:
-      - port: 8080
-
+      - port: 10000 # External port Render uses
+        targetPort: 8080 # Internal port the app listens on
     envVars:
       - key: DATABASE_PROVIDER
         value: postgresql
@@ -25,7 +22,7 @@ services:
           name: evolutionDB
           property: connectionString
       - key: PORT
-        value: "8080"
+        value: "8080" # Internal port
       - key: CACHE_REDIS_ENABLED
         value: "true"
       - key: CACHE_REDIS_URI
@@ -39,9 +36,8 @@ services:
         value: "*"
       - key: AUTHENTICATION_API_KEY
         value: ab8rmpU9V4T4XwwfAbUWg1N4z1evOgZ4
-      # Add this to ensure app listens on the right port
       - key: EXTERNAL_PORT
-        value: "8080"
+        value: "10000" # Match Render's external port
 
   - type: keyvalue
     name: evolution-redis
