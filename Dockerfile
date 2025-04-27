@@ -1,1 +1,1 @@
-FROM docker.io/davidsongomes/evolution-api:latest
+FROM atendai/evolution-api:latest
