@@ -37,7 +37,7 @@ services:
           name: evolution-mongodb
           property: password
       - key: DATABASE_NAME
-        value: evolution-api
+        value: evolution_api
       - key: INSTANCE_MAX_RETRY_QR
         value: "5"
       - key: DEL_INSTANCE
@@ -49,4 +49,5 @@ databases:
   - name: evolution-mongodb
     region: frankfurt # opcional (padrão é oregon)
     plan: free
-    databaseName: evolution-api
+    # Corrigido para usar underscores em vez de hífens
+    databaseName: evolution_api
