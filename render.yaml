@@ -2,24 +2,52 @@ services:
   - type: web
     name: evolution-api
     env: docker
-    region: frankfurt # define a região (mesma do banco para menor latência)
+    region: frankfurt
     plan: free
     branch: main
-    numInstances: 1 # número de instâncias do serviço
-    healthCheckPath: /healthz # endpoint de checagem de saúde
+    numInstances: 1
+    healthCheckPath: /healthz
 
     envVars:
+      # Banco de dados principal
       - key: DATABASE_PROVIDER
-        value: postgresql # especifica o provedor do banco (PostgreSQL)
+        value: postgresql
       - key: DATABASE_URL
-        # URL de conexão completa (usuário, senha, host, porta, nome do banco) do PostgreSQL no Render
         fromDatabase:
           name: evolutionDB
           property: connectionString
+
+      # Porta do servidor
       - key: PORT
-        value: 8080 # porta em que a aplicação será executada (padrão 8080)
+        value: 8080
+
+      # Configurações de Redis (usando o Redis gerenciado pela Render)
+      - key: CACHE_REDIS_ENABLED
+        value: "true"
+      - key: CACHE_REDIS_URI
+        fromService:
+          type: redis
+          name: evolution-redis
+          property: connectionString
+
+      # Outras variáveis essenciais (pode expandir depois conforme seu .env)
+      - key: SERVER_TYPE
+        value: http
+      - key: SERVER_PORT
+        value: 8080
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: AUTHENTICATION_API_KEY
+        value: ab8rmpU9V4T4XwwfAbUWg1N4z1evOgZ4
+      - key: LANGUAGE
+        value: en
 
 databases:
   - name: evolutionDB
-    region: frankfurt # banco de dados na mesma região do serviço
-    plan: free # plano gratuito do banco
+    region: frankfurt
+    plan: free
+
+redis:
+  - name: evolution-redis
+    region: frankfurt
+    plan: free
